@@ -2,70 +2,79 @@
     """
 
 from nose.tools import assert_equal
+from nose.tools import assert_raises
 import time
 
+
 def factorial_recursive(n):
-    if type(n) != int:
-        print 'This function is only defined for non-negative integers'
-        return None
-    elif n < 0:
-        print 'This function is only defined for non-negative integers'
-        return None
+    """ Calculates n! using recursion. n must be a
+    non-negative integer
+    """
+    if (type(n) != int) or n < 0:
+        raise ValueError('This function is only defined for'
+                         ' non-negative integers')
     elif n == 0:
         return 1
     else:
         again = factorial_recursive(n-1)
-        # crashes here when n is set to (super) large numbers
-        output = n * again
-        return output
+        return n * again
+
 
 def factorial(n):
+    """ Calculates n! using loops n must be a
+    non-negative integer
+    """
     result = n
-    if type(n) != int:
-        print 'This function is only defined for non-negative integers'
-        return None
-    elif n < 0:
-        print 'This function is only defined for non-negative integers'
-        return None
+    if type(n) != int or n < 0:
+        raise ValueError('This function is only defined for'
+                         ' non-negative integers')
     elif n == 0:
         return 1
     while n > 1:
-        result = result*(n-1)
-        n = n-1
+        result *= (n-1)
+        n -= 1
     return result
 
 
-def timeRecursive(n):
-    tStart = time.clock()
-    factorial_recursive(n)
-    elapsed = time.clock() - tStart
+def time_function(n, func2time):
+    """Computation time test for any function 'func2time'
+    that takes one positional argument 'n'. Used here for
+    factorial and factorial_recursive
+    """
+    tStart = time.time()
+    func2time(n)
+    elapsed = time.time() - tStart
     return elapsed
 
-def timeNonRecursive(n):
-    tStart = time.clock()
-    factorial(n)
-    elapsed = time.clock() - tStart
-    return elapsed
 
-def timeTest(n):
-    a = timeRecursive(n)
-    b = timeNonRecursive(n)
-    print 'For calculating the factorial of %(a)s, the time ratio (recursive:non-recursive) is %(ratio)s.' %{'a':n,'ratio': a/b}
+def time_test(n):
+    """Times the factorial and factorial_recursive functions
+    for n and returns times in that order
+    """
+    a = time_function(n, factorial_recursive)
+    b = time_function(n, factorial)
+    return a, b
+
 
 def test_factorial():
+    """Tests factorial and factorial_recursive to ensure
+    that they give the same output given legal input and
+    raise ValueError for negative numbers, floats, and strings
+    """
     assert_equal(factorial_recursive(1), 1)
-    assert_equal(factorial_recursive(99),factorial(99))
-    assert_equal(factorial_recursive(-1), None)
-    assert_equal(factorial_recursive(3.14159), None)
-    nconditions = raw_input("Please enter number of conditions: ")
-    norders = factorial_recursive(int(nconditions))
-    print("Number of possible trial orders: " + str(norders))
+    assert_equal(factorial_recursive(99), factorial(99))
+    assert_raises(ValueError, factorial, -1)
+    assert_raises(ValueError, factorial_recursive, -1)
+    assert_raises(ValueError, factorial_recursive, 3.14159)
+    assert_raises(ValueError, factorial, 3.14159)
+    assert_raises(ValueError, factorial_recursive, 'string')
+    assert_raises(ValueError, factorial, 'string')
+
 
 if __name__ == '__main__':
     # This is a way to determine either file was "executed", so if it was
     # imported (by e.g. nose) as a library, we should not run code
     # below
-    
-    nconditions = raw_input("Please enter number of conditions: ")
+    nconditions = int(raw_input("Please enter number of conditions: "))
     norders = factorial_recursive(nconditions)
     print("Number of possible trial orders: " + str(norders))
