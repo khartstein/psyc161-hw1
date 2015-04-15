@@ -36,10 +36,10 @@ def factorial(n):
     return result
 
 
-def time_function(n, func2time):
+def time_function(func2time, n):
     """Computation time test for any function 'func2time'
-    that takes one positional argument 'n'. Used here for
-    factorial and factorial_recursive
+    that takes one positional argument 'n' (default is 100).
+    Used here for factorial and factorial_recursive.
     """
     tStart = time.time()
     func2time(n)
@@ -47,13 +47,22 @@ def time_function(n, func2time):
     return elapsed
 
 
-def time_test(n):
+def time_test(n=99):
     """Times the factorial and factorial_recursive functions
     for n and returns times in that order
     """
-    a = time_function(n, factorial_recursive)
-    b = time_function(n, factorial)
+    a = time_function(factorial_recursive, n)
+    b = time_function(factorial, n)
     return a, b
+
+
+def test_time_test():
+    """ Tests the time_test function to make sure it returns
+    integers
+    """
+    a, b = time_test(99)
+    assert_equal(type(a), float)
+    assert_equal(type(b), float)
 
 
 def test_factorial():
