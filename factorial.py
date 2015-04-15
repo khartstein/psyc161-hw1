@@ -38,7 +38,7 @@ def factorial(n):
 
 def time_function(func2time, n):
     """Computation time test for any function 'func2time'
-    that takes one positional argument 'n' (default is 100).
+    that takes one positional argument 'n'.
     Used here for factorial and factorial_recursive.
     """
     tStart = time.time()
@@ -49,7 +49,7 @@ def time_function(func2time, n):
 
 def time_test(n=99):
     """Times the factorial and factorial_recursive functions
-    for n and returns times in that order
+    for n (default = 99) and returns times in that order
     """
     a = time_function(factorial_recursive, n)
     b = time_function(factorial, n)
